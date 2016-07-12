@@ -1,7 +1,10 @@
 import requests
 import platform
 from authy import __version__, AuthyFormatException
-from urllib import quote
+try:
+    from urllib import quote
+except ImportError:
+    from urllib.parse import quote
 
 # import json
 try:
@@ -34,7 +37,7 @@ class Resource(object):
     def request(self, method, path, data = {}, headers = {}):
         url = self.api_uri + path
         params = {"api_key": self.api_key}
-        headers = dict(self.def_headers.items() + headers.items())
+        headers.update(self.def_headers)
 
         if method == "GET":
             params.update(data)
